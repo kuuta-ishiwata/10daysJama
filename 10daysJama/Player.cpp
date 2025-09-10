@@ -6,44 +6,19 @@
 
 
 
-bool IsPlayerOnLine(object player, Line line) {
-	float px = player.position.X;
-	float py = player.position.Y;
 
-	// 横線の判定
-	if (line.y1 == line.y2) {
-		if (abs(py - line.y1) <= line.thickness &&
-			px >= line.x1 && px <= line.x2) {
-			return true;
-		}
-	}
-
-	// 縦線の判定
-	if (line.x1 == line.x2) {
-		if (abs(px - line.x1) <= line.thickness &&
-			py >= line.y2 && py <= line.y1) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-Player::~Player()
-{
-
-}
 
 void Player::Initialize()
 {
 	//プレイヤー
 	player =
 	{
-		{64,64},
+		{64,200},
 		{0,0},
 		16
 	};
-	line = { 1000, 600, 1000, 400, 5 }; // Xは同じ、Yが上に向かって減る
+	scrolX = 0;
+	line = { 1000, 550, 1000, 400, 5 }; // Xは同じ、Yが上に向かって減る
 	
 
 }
@@ -52,7 +27,7 @@ void Player::Update(char* keys, char* prekeys)
 {
 	
 	const int screenCenterX = 640;
-	const int mapWidth = 50 * BLOCKsize;
+	const int mapWidth = 100 * BLOCKsize;
 	const int screenWidth = 1280;
 
 	int maxScroll = mapWidth - screenWidth;
@@ -222,7 +197,9 @@ void Player::Update(char* keys, char* prekeys)
 
 #pragma endregion
 }
+
 bool Player::IsPlayerOnLine(object player, Line line) {
+
 	float px = player.position.X;
 	float py = player.position.Y;
 
@@ -247,11 +224,14 @@ bool Player::IsPlayerOnLine(object player, Line line) {
 
 void Player::Draw()
 {
+
 	Novice::DrawBox(0, 0, 1280, 720, 0.0f, WHITE, kFillModeSolid);
-	
-	
+	Novice::DrawBox(400-scrolX, 500, 25, 25, 0.0f, RED, kFillModeSolid);
+	Novice::DrawBox(400 - scrolX, 550, 25, 25, 0.0f, BLUE, kFillModeSolid);
+	Novice::DrawBox(250 - scrolX, 500, 25, 25, 0.0f, GREEN, kFillModeSolid);
+	Novice::DrawBox(100 - scrolX, 500, 25, 25, 0.0f, RED, kFillModeSolid);
 	Novice::DrawBox(
-		(int)line.x1 - scrolX, (int)line.y2,                     // 上の方から描画
+		(int)line.x1-scrolX , (int)line.y2,                     // 上の方から描画
 		(int)line.thickness, (int)(line.y1 - line.y2),           // 高さは y1 - y2
 		0.0f,
 		RED,
@@ -260,7 +240,7 @@ void Player::Draw()
 	Novice::DrawSprite(player.position.X - player.radius - scrolX , player.position.Y - player.radius, irasuto, 1, 1, 0.0f, WHITE);
 	for (int y = 0; y < 25; y++)
 	{
-		for (int x = 0; x < 50; x++)
+		for (int x = 0; x < 100; x++)
 		{
 			if (map[y][x] == BLOCK)//普通のブロック
 			{

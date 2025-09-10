@@ -3,7 +3,7 @@
 #include "Vector2.h"
 
 #include "Map.h"
-const char kWindowTitle[] = "LE2C_02_イシワタクウタ";
+const char kWindowTitle[] = "境界線";
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -25,9 +25,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	map = new Map();
 	map->Initialize();
 	int scene = 0;
-	Line line = { 1000, 600, 1000, 400, 5 }; // ← 実体でOK！
-	
-
+	Line line = { 1000, 500, 1000, 300, 5 }; // ← 実体でOK！
+	Line line2  = { 3000, 550, 1000, 400, 5 };
+	int OP = Novice::LoadTexture("./kyoukaisenn.png");
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -64,15 +64,30 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				
 			}
 			break;
+
 		case 2:
+
 			map->Update(keys, preKeys); // ← 毎フレーム呼ぶ！
-			if (map->IsPlayerOnLine(player->player, line))
+			if (map->IsPlayerOnLine(player->player, line2))
 			{
+				
 				scene = 1;
 				player->player.position = { 64, 64 };
+
 			}
 
 			break;
+
+		case 3:
+			map->Update(keys, preKeys); // ← 毎フレーム呼ぶ！
+			if (map->IsPlayerOnLine(player->player, line2))
+			{
+
+				scene = 2;
+				player->player.position = { 64, 64 };
+
+			}
+		break;
 		}
 		
 		///
@@ -82,17 +97,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 		/// ↓描画処理ここから
 		///
-		
+		if (scene == 0)
+		{
+			Novice::DrawSprite(0, 0, OP, 1, 1, 0.0f, WHITE);
+		}
 		if (scene == 1)
 		{
 			player->Draw();
-
-
 		}
-		else if (scene == 2)
+		if (scene == 2)
 		{
-			
 			map->Draw();
+		}
+		if(scene == 3)
+		{
+			player->Draw();
 		}
 	
 		///
